@@ -5,7 +5,7 @@ const jwt = require('koa-jwt');
 const config = require('./config/config');
 const Mongorito = require('mongorito');
 
-Mongorito.connect('mongodb://localhost/partynow');
+Mongorito.connect(`mongodb://${ config.mongodb.host }:${ config.mongodb.port }/partynow`);
 
 app.keys = ['secret'];
 app.use(bodyParser());

@@ -10,7 +10,7 @@ function* login(next) {
 	if(user && user.get('password') === util.sha1(req.password)) {
 		this.body = {
 			Success: true,
-			token: jwt.sign({ foo: 'bar' }, config.secret, {expiresIn: config.TOKEN_EXPIRATION })
+			token: jwt.sign({ username: req.username }, config.secret, {expiresIn: config.TOKEN_EXPIRATION })
 		}
 	} else {
 		this.body = {
