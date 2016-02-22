@@ -3,10 +3,12 @@
 const config = {
     env: 'local',
     mongodb: {
-        host: 'localhost',
-        port: 27017
+        connection: '',
+        host: 'localhost',        
+        port: 27017,
+        collection: 'partynow'
     },
     debug: true
-};
+}
 
-module.exports = config;
+module.exports = config

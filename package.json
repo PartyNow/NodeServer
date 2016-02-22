@@ -4,17 +4,24 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "NODE_ENV=development node app.js",
-    "test": "ava --serial"
+    "start": "node app.js",
+    "dev": "NODE_ENV=development nodemon -L app.js",
+    "test": "NODE_ENV=development ava --serial"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Dreamacro",
+  "license": "MIT",
   "dependencies": {
+    "jsonwebtoken": "^5.4.1",
     "koa": "^1.1.2",
     "koa-bodyparser": "^2.0.1",
-    "koa-jwt": "^1.1.1",
-    "koa-router": "^5.2.3",
-    "mongorito": "^1.4.0"
+    "koa-router": "^5.3.0",
+    "koa-static": "^2.0.0",
+    "koa-unless": "0.0.1",
+    "mongorito": "^1.4.6",
+    "ramda": "^0.19.1",
+    "shortid": "^2.2.4",
+    "thunkify": "^2.1.2",
+    "validator": "^4.4.0"
   },
   "devDependencies": {
     "supertest": "^1.1.0"

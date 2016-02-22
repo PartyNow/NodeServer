@@ -1,14 +1,14 @@
 FROM node
 
-RUN apt-get update \
-    && apt-get install -y git ssh-client ca-certificates --no-install-recommends \
-    && rm -r /var/lib/apt/lists/*
-
 RUN echo "Asia/Shanghai" > /etc/timezone \
     && dpkg-reconfigure -f noninteractive tzdata
-	
-WORKDIR /partynow
 
-EXPOSE 80
+RUN mkdir -p /opt/partynow
+WORKDIR /opt/partynow
+COPY . /opt/partynow
+
+RUN npm install
+
+EXPOSE 3000
 
 CMD ["npm", "start"]

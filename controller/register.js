@@ -1,35 +1,41 @@
-'use strict';
-const User = require('../model/user');
-const util = require('../util');
+'use strict'
+const User = require('../model/user')
+const util = require('../util')
+const shortid = require('shortid')
+const config = require('../config/config')
+const jwt = require('../middleware/jwt')
+const validator = require('validator')
 
 function* register(next) {
     const req = this.request.body,
           username = req.username,
           password = req.password,
-          userReg = /^[a-zA-Z][A-Za-z0-9_]{4,15}$/,
-          passReg = /^[A-Za-z0-9_]{8,30}$/;// /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/;
-    if(!username || typeof username !== 'string' || !userReg.test(username) || !password || typeof password !== 'string' || !passReg.test(password)) {
-        this.body = {
-            msg: "Illegal"
-        };
-        this.status = 400;
+          email = req.email
+          // userReg = /^[a-zA-Z][A-Za-z0-9_]{4,15}$/,
+          // passReg = /^[A-Za-z0-9_]{8,30}$/// /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/
+
+    if(!validator.matches(username, /^[a-zA-Z][A-Za-z0-9_]{4,15}$/)
+        || !validator.isEmail(email)
+        || !validator.matches(password, /^[A-Za-z0-9_]{8,30}$/)) {
+        this.throw(400, 'Illegal')
     } else {
+        const sid = shortid.generate()
         const user = new User({
+            id: sid,
             username,
-            password: util.sha1(password)
-        });
+            email,
+            password: util.sha256(password)
+        })
         try {
-            yield* user.save();
+            yield* user.save()
             this.body = {
-                msg: "Success"
-            };
+                message: "success",
+                token: jwt.sign({ id: sid }, config.secret, { expiresIn: config.TOKEN_EXPIRATION })
+            }
         } catch (e) {
-            this.body = {
-                msg: "Exist"
-            };
-            this.status = 400;
+            this.throw(400, 'Exist')
         }
     }
 }
 
-module.exports = register;
+module.exports = register

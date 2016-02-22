@@ -1,18 +1,24 @@
-const app = require('koa')();
-const router = require('./router');
-const bodyParser = require('koa-bodyparser');
-const jwt = require('koa-jwt');
-const config = require('./config/config');
-const Mongorito = require('mongorito');
+const app = require('koa')()
+const router = require('./router')
+const bodyParser = require('koa-bodyparser')
+const config = require('./config/config')
+const Mongorito = require('mongorito')
+const error = require('./middleware/error')
+// const serve = require('koa-static')
 
-Mongorito.connect(`mongodb://${ config.mongodb.host }:${ config.mongodb.port }/partynow`);
+Mongorito.connect(`mongodb://${ config.mongodb.host }:${ config.mongodb.port }/${ config.mongodb.collection }`)
 
-app.keys = ['secret'];
-app.use(bodyParser());
-app.use(jwt({ secret: config.secret }).unless({ path: [/^\/login/, /^\/register/] }));
-app.use(router.routes());
+app.use(bodyParser())
 
-app.listen(config.port);
-console.log('listening on port %s', config.port);
+// custom error middleware
+app.use(error())
 
-module.exports = app;
+// router
+app.use(router.routes())
+
+// app.use(serve('public'))
+
+app.listen(config.port)
+console.log('listening on port %s', config.port)
+
+module.exports = app
